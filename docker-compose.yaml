@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  grafana:
+    # image: grafana/grafana-oss:11.2.2  # Use a specific version; replace with grafana/grafana-enterprise if needed
+    image: grafana/grafana:12.0.1
+    container_name: grafana
+    restart: unless-stopped
+    # user: "1000"  # Replace with your host UID to run as non-root
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"  # Expose internally; use reverse proxy for external access
+    volumes:
+      - ./grafana-data:/var/lib/grafana  # Bind mount for persistence
+    environment:
+      # - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL}  # Use your domain; enables correct URL rendering
+      - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password  # Use secrets for sensitive data
+      - GF_DATABASE_TYPE=${GF_DATABASE_TYPE}
+      - GF_DATABASE_HOST=${GF_DATABASE_HOST}
+      - GF_DATABASE_NAME=${GF_DATABASE_NAME}
+      - GF_DATABASE_USER=${GF_DATABASE_USER}
+      - GF_DATABASE_PASSWORD__FILE=/run/secrets/db_password
+      - GF_SECURITY_ALLOW_EMBEDDING=${GF_SECURITY_ALLOW_EMBEDDING}  # Disable embedding to prevent clickjacking
+      - GF_SECURITY_COOKIE_SAMESITE=${GF_SECURITY_COOKIE_SAMESITE}  # Mitigate CSRF
+      - GF_LOG_LEVEL=${GF_LOG_LEVEL}  # Set to debug for troubleshooting
+      # - GF_QUERY_CACHE_ENABLED=${GF_QUERY_CACHE_ENABLED}  # Enable query caching for large datasets
+      # - GF_QUERY_CACHE_TTL=${GF_QUERY_CACHE_TTL}  # Cache queries for 1 hour (adjust as needed)
+      # - GF_DATABASE_MAX_OPEN_CONNS=${GF_DATABASE_MAX_OPEN_CONNS}  # Increase DB connections for high concurrency
+      # - GF_DATABASE_MAX_IDLE_CONNS=${GF_DATABASE_MAX_IDLE_CONNS}  # Maintain idle connections
+    deploy:  # Resource limits for Grafana
+      resources:
+    # image: grafana/grafana-oss:11.2.2  # Use a specific version; replace with grafana/grafana-enterprise if needed
+        limits:
+          cpus: '0.5'  # Allocate 0.5 CPU cores
+          memory: 500M   # Allocate 500MB memory
+        reservations:
+          cpus: '0.5'  # Reserve at least 0.5 CPU core
+          memory: 250M   # Reserve 250MB memory
+    secrets:
+      - grafana_admin_password
+      - db_password
+
+  db:
+    image: postgres:16-alpine  # Lightweight Alpine variant for security
+    container_name: grafana-db
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}
+      - POSTGRES_PASSWORD__FILE=/run/secrets/db_password
+    secrets:
+      - db_password
+
+volumes:
+  pgdata: {}  # Named volume for database persistence
+
+secrets:
+  grafana_admin_password:
+    file: ./secrets/grafana_admin_password.txt  # Create this file with a strong password
+  db_password:
+    file: ./secrets/db_password.txt  # Create this file with a strong password
