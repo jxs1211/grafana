@@ -6,29 +6,23 @@ services:
     image: grafana/grafana:12.0.1
     container_name: grafana
     restart: unless-stopped
-    # user: "1000"  # Replace with your host UID to run as non-root
     depends_on:
       - db
     ports:
-      - "3000:3000"  # Expose internally; use reverse proxy for external access
+      - "3000:3000"
     volumes:
       - ./grafana-data:/var/lib/grafana  # Bind mount for persistence
     environment:
-      # - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL}  # Use your domain; enables correct URL rendering
-      - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password  # Use secrets for sensitive data
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
       - GF_DATABASE_TYPE=${GF_DATABASE_TYPE}
       - GF_DATABASE_HOST=${GF_DATABASE_HOST}
       - GF_DATABASE_NAME=${GF_DATABASE_NAME}
       - GF_DATABASE_USER=${GF_DATABASE_USER}
-      - GF_DATABASE_PASSWORD__FILE=/run/secrets/db_password
-      - GF_SECURITY_ALLOW_EMBEDDING=${GF_SECURITY_ALLOW_EMBEDDING}  # Disable embedding to prevent clickjacking
-      - GF_SECURITY_COOKIE_SAMESITE=${GF_SECURITY_COOKIE_SAMESITE}  # Mitigate CSRF
-      - GF_LOG_LEVEL=${GF_LOG_LEVEL}  # Set to debug for troubleshooting
-      # - GF_QUERY_CACHE_ENABLED=${GF_QUERY_CACHE_ENABLED}  # Enable query caching for large datasets
-      # - GF_QUERY_CACHE_TTL=${GF_QUERY_CACHE_TTL}  # Cache queries for 1 hour (adjust as needed)
-      # - GF_DATABASE_MAX_OPEN_CONNS=${GF_DATABASE_MAX_OPEN_CONNS}  # Increase DB connections for high concurrency
-      # - GF_DATABASE_MAX_IDLE_CONNS=${GF_DATABASE_MAX_IDLE_CONNS}  # Maintain idle connections
-    deploy:  # Resource limits for Grafana
+      - GF_DATABASE_PASSWORD=${GF_DATABASE_PASSWORD}
+      - GF_SECURITY_ALLOW_EMBEDDING=${GF_SECURITY_ALLOW_EMBEDDING}
+      - GF_SECURITY_COOKIE_SAMESITE=${GF_SECURITY_COOKIE_SAMESITE}
+      - GF_LOG_LEVEL=${GF_LOG_LEVEL}
+    deploy:
       resources:
     # image: grafana/grafana-oss:11.2.2  # Use a specific version; replace with grafana/grafana-enterprise if needed
         limits:
