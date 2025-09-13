@@ -1,0 +1,42 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "grafana",
+  "signedByOrg": "grafana",
+  "signedByOrgName": "Grafana Labs",
+  "plugin": "yesoreyeram-infinity-datasource",
+  "version": "3.4.1",
+  "time": 1753958500127,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "plugin.json": "9d0b5128dba56c76608572c8e68a2f94ec9f6735c33444d72f4fc97e5e7046b5",
+    "img/slide-variables.png": "8ed0cd7b1ac00bd2c7fa6e72c513b678c39ba7d63030f06e8695cb1d352e3b34",
+    "img/oauth-2-sm.png": "9945bb307d5545369d50381acc97d48b4a98433831f14e99eb839f0970a91258",
+    "img/slide-series.png": "f7d523c39f9d4567974c37432f047e4e8944cb92dc2c9a4424757ce5e54dc3a7",
+    "img/homepage-bg.svg": "97ec32b2c542bcb63b7fa7659e42a876a5b9ec00aef7a486f2dc41b83d7d9eb8",
+    "img/slide-rest-api.png": "cf72349768e0ccf19a856d86e97c8e67dcdadfcee49e73ae5acbe781c3ae0c79",
+    "img/slide-features.png": "58aba3b2f2d73ee99945cba9746463f0039d8afb5366ed8d42db62145b914d0f",
+    "img/icon.svg": "e498b00e1cc3c9e8b65a2b8320b7d170c6da61d424fe5f3f3fdf9963204449ae",
+    "img/aws.jpg": "e682ccc794708fd3eb32a3fb5e2bcccd8ff3b54f30eba2086fd1b28a82020d81",
+    "go_plugin_build_manifest": "fd7b656af83750c279271626fc99b48acf84ba947ca771a96ef40c7235200b72",
+    "module.js.LICENSE.txt": "99c2a3e174dd5e46ac78787c5d7965079f788f7edf923e0868a3505826b0e34d",
+    "module.js.map": "18beba554f78ec1ebd218b9a59d8b8b93eab4c9d3093813b62f749cabb930aea",
+    "README.md": "351dea529ec76dc9b396ef8f29d4ec36cab5ace16040f42142f0c58427ee3a7d",
+    "module.js": "0798756dc256d024347f06f531178c3f36a4389b0d699964c97e192acb5cc65e",
+    "CHANGELOG.md": "f160e1f467b89c5c52dd2d76f3901c9736688fb0d8b0e9aa9f9ebbc42dd58b2b",
+    "LICENSE": "85fb2c20b586ef9dc00ee5c41140e1cd59fdded9a0b24a9054b04e9f0f6b2977",
+    "gpx_infinity_linux_amd64": "176c0867dcfffc1d0d83bedaae2f2ec7b30ddee2f4a346775c98b3492b21ea61"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+
+wsA/BAETCgBtBYJoi0hkCZB+TQxqcIhm50UUAAAAAAAcACBzYWx0QG5vdGF0
+aW9ucy5vcGVucGdwanMub3JnhQR7s0k2c/eyWSQtq2i/cw7jTa2rqRL21o5c
+nighc8UWIQTzOyW2kQdOhGNlcPN+TQxqcIhm5wAADWwCCQFiiduml3GST/kL
+LbAo8+KF8Y4IgusE21zCgyeRxEiHx5QwCm7aPo+U8mOSsKNbfmv0f6Evshdb
+nmPafE1YQjdfAgIJAUuBaOj6q7529GSJqjT4SirJBKY5ihLjakFORAwlu9c+
+Tlk3GTVekVROwlEhthvG8+slMNJtwDZcqvzyJl6vrvUu
+=YP50
+-----END PGP SIGNATURE-----
