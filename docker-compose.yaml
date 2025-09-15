@@ -1,4 +1,4 @@
-version: '3.8'
+# version: '3.8'
 
 services:
   grafana:
@@ -8,10 +8,13 @@ services:
     restart: unless-stopped
     depends_on:
       - db
+      # - prometheus
+      - alertmanager
     ports:
       - "3000:3000"
     volumes:
       - ./grafana-data:/var/lib/grafana  # Bind mount for persistence
+      - ./grafana.ini:/etc/grafana/grafana.ini
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
       - GF_DATABASE_TYPE=${GF_DATABASE_TYPE}
@@ -22,6 +25,18 @@ services:
       - GF_SECURITY_ALLOW_EMBEDDING=${GF_SECURITY_ALLOW_EMBEDDING}
       - GF_SECURITY_COOKIE_SAMESITE=${GF_SECURITY_COOKIE_SAMESITE}
       - GF_LOG_LEVEL=${GF_LOG_LEVEL}
+      # Alertmanager Integration
+      - GF_ALERTING_ENABLED=true
+      - GF_UNIFIED_ALERTING_ENABLED=true
+      - GF_EXTERNAL_IMAGE_STORAGE_PROVIDER=local
+      # SMTP Environment Variables
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS}
+      - SMTP_FROM_NAME=${SMTP_FROM_NAME}
+      - SMTP_SKIP_VERIFY=${SMTP_SKIP_VERIFY:-false}
+      - SMTP_STARTTLS_POLICY=${SMTP_STARTTLS_POLICY:-OpportunisticStartTLS}
     deploy:
       resources:
     # image: grafana/grafana-oss:11.2.2  # Use a specific version; replace with grafana/grafana-enterprise if needed
@@ -35,8 +50,60 @@ services:
       - grafana_admin_password
       - db_password
 
+  # prometheus:
+  #   image: prom/prometheus:v2.54.1
+  #   container_name: prometheus
+  #   restart: unless-stopped
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - ./prometheus/rules:/etc/prometheus/rules
+  #     - prometheus-data:/prometheus
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #     - '--storage.tsdb.path=/prometheus'
+  #     - '--web.console.libraries=/etc/prometheus/console_libraries'
+  #     - '--web.console.templates=/etc/prometheus/consoles'
+  #     - '--storage.tsdb.retention.time=30d'
+  #     - '--web.enable-lifecycle'
+  #     - '--web.enable-admin-api'
+  #     - '--alertmanager.url=http://alertmanager:9093'
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 1G
+  #       reservations:
+  #         cpus: '0.25'
+  #         memory: 500M
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yaml:/etc/alertmanager/alertmanager.yaml
+      - ./templates:/etc/alertmanager/templates
+      - alertmanager-data:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+      - '--cluster.listen-address='
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+
   db:
-    image: postgres:16-alpine  # Lightweight Alpine variant for security
+    image: postgres:16-alpine
     container_name: grafana-db
     restart: unless-stopped
     volumes:
@@ -51,10 +118,12 @@ services:
       - db_password
 
 volumes:
-  pgdata: {}  # Named volume for database persistence
+  pgdata: {}
+  prometheus-data: {}
+  alertmanager-data: {}
 
 secrets:
   grafana_admin_password:
-    file: ./secrets/grafana_admin_password.txt  # Create this file with a strong password
+    file: ./secrets/grafana_admin_password.txt
   db_password:
-    file: ./secrets/db_password.txt  # Create this file with a strong password
+    file: ./secrets/db_password.txt
