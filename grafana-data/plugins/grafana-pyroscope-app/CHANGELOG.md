@@ -1,5 +1,48 @@
 # Changelog
 
+## 1.10.0
+
+##### Chores
+
+*  Add missing target to plugin.json (#605) (3d7c76dc)
+*  Update @grafana/faro-web-sdk to latest release (#603) (cb3615dc)
+* **e2e:**  Upgrade Playwright to 1.55.1 (#604) (95940103)
+
+##### Continuous Integration
+
+*  Deploy automatically to ops (#600) (9632905b)
+
+##### New Features
+
+*  update extension point for grafana assistant, add vars and tests (#593) (50820a7a)
+
+##### Bug Fixes
+
+*  Update grafana/assistant (#597) (6a5758ac)
+
+
+## 1.9.0
+
+##### Chores
+
+*  Use a specific version of Pyroscope for e2e tests (#587) (ab5a4543)
+
+##### Continuous Integration
+
+*  Add a workflow to publish a PR/branch (#578) (c690fc67)
+
+##### New Features
+
+* **Metrics From Profiles:**  Automatically prefix metric name (#592) (7404aba4)
+*  Add rate calculation support and step synchronization (#548) (0538e0bc)
+* **AI:**  Integrate with Grafana Assistant (#558) (0756b05a)
+
+##### Bug Fixes
+
+*  recording rules list to use rule id as row id (#591) (d07f2528)
+*  use rule id as row id (4e261a87)
+
+
 ## 1.8.1
 
 
